@@ -1,34 +1,37 @@
 :root {
-  --bg: #0a0a1f;
-  --text: #cccccc;
-  --face: rgba(160, 180, 255, 0.09);
-  --center: rgba(255, 255, 255, 0.85);
-  --hint: #666688;
-  --button-bg: rgba(255, 255, 255, 0.08);
-  --button-border: rgba(255, 255, 255, 0.18);
-  --button-hover: rgba(255, 255, 255, 0.15);
+  --bg: #0b0e1a;
+  --text: #d0d8e0;
+  --face: rgba(100, 180, 255, 0.08);
+  --center: #a0c0ff;
+  --hint: #7a8ca0;
+  --button-bg: rgba(255, 255, 255, 0.06);
+  --button-border: rgba(160, 200, 255, 0.25);
+  --button-hover: rgba(120, 180, 255, 0.12);
+  --accent-glow: #60d0ff;
 }
 
 [data-theme="light"] {
-  --bg: #f5f6fa;
-  --text: #2c2c54;
-  --face: rgba(60, 60, 80, 0.10);
-  --center: #444466;
-  --hint: #777799;
-  --button-bg: rgba(0, 0, 0, 0.06);
-  --button-border: rgba(0, 0, 0, 0.15);
-  --button-hover: rgba(0, 0, 0, 0.10);
+  --bg: #f8f9fc;
+  --text: #1e2a44;
+  --face: rgba(80, 120, 200, 0.09);
+  --center: #3a5aa8;
+  --hint: #6b8299;
+  --button-bg: rgba(30, 50, 90, 0.05);
+  --button-border: rgba(80, 120, 200, 0.2);
+  --button-hover: rgba(80, 120, 200, 0.1);
+  --accent-glow: #2a9dd4;
 }
 
 [data-theme="neon"] {
-  --bg: #0d0015;
-  --text: #00ffff;
-  --face: rgba(0, 255, 255, 0.18);
-  --center: #ff00ff;
-  --hint: #00ff88;
-  --button-bg: rgba(0, 255, 255, 0.12);
-  --button-border: rgba(0, 255, 255, 0.4);
-  --button-hover: rgba(0, 255, 255, 0.22);
+  --bg: #0a0014;
+  --text: #e0ffff;
+  --face: rgba(0, 255, 240, 0.16);
+  --center: #ff00ea;
+  --hint: #00ffaa;
+  --button-bg: rgba(0, 255, 240, 0.14);
+  --button-border: rgba(255, 0, 234, 0.45);
+  --button-hover: rgba(0, 255, 240, 0.25);
+  --accent-glow: #ff00ea;
 }
 
 * {
@@ -41,9 +44,9 @@ html, body {
   height: 100%;
   background: var(--bg);
   color: var(--text);
-  font-family: 'Orbitron', system-ui, sans-serif;
+  font-family: 'Exo 2', system-ui, -apple-system, sans-serif;
   overflow: hidden;
-  transition: background 0.7s ease, color 0.7s ease;
+  transition: background 0.8s ease, color 0.8s ease;
 }
 
 .page {
@@ -63,11 +66,11 @@ html, body {
 
 .controls {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
+  top: 1.6rem;
+  right: 1.6rem;
   z-index: 10;
   display: flex;
-  gap: 0.8rem;
+  gap: 0.9rem;
   flex-wrap: wrap;
 }
 
@@ -75,54 +78,59 @@ html, body {
   background: var(--button-bg);
   border: 1px solid var(--button-border);
   color: var(--text);
-  padding: 0.6rem 1.1rem;
-  border-radius: 6px;
+  padding: 0.65rem 1.2rem;
+  border-radius: 8px;
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(4px);
+  transition: all 0.35s ease;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
 }
 
 .controls button:hover {
   background: var(--button-hover);
-  transform: translateY(-1px);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 
 .controls button.active {
-  background: rgba(120, 255, 200, 0.25);
-  border-color: #60ffa0;
-  box-shadow: 0 0 14px rgba(80, 255, 140, 0.45);
+  background: color-mix(in srgb, var(--accent-glow) 18%, transparent);
+  border-color: var(--accent-glow);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent-glow) 60%, transparent);
+  transform: scale(1.04);
 }
 
 .hint {
   position: absolute;
-  bottom: 1.2rem;
+  bottom: 1.4rem;
   left: 50%;
   transform: translateX(-50%);
   color: var(--hint);
-  font-size: 0.95rem;
-  opacity: 0.65;
+  font-size: 0.96rem;
+  opacity: 0.7;
   pointer-events: none;
   white-space: nowrap;
-  transition: color 0.7s ease, opacity 0.7s ease;
+  transition: color 0.8s ease, opacity 0.8s ease;
+  letter-spacing: 0.5px;
 }
 
 @media (max-width: 480px) {
   .controls {
-    top: 1rem;
-    right: 1rem;
-    gap: 0.6rem;
+    top: 1.1rem;
+    right: 1.1rem;
+    gap: 0.7rem;
   }
-  
+
   .controls button {
-    padding: 0.5rem 0.9rem;
-    font-size: 0.82rem;
+    padding: 0.55rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
   }
-  
+
   .hint {
-    font-size: 0.82rem;
-    bottom: 0.8rem;
+    font-size: 0.84rem;
+    bottom: 0.9rem;
   }
 }
