@@ -1,5 +1,6 @@
 const canvas = document.getElementById("clockCanvas");
 const ctx = canvas.getContext("2d");
+
 let CENTER, RADIUS;
 let currentTheme = 'dark';
 let neonPulse = 0;
@@ -7,16 +8,20 @@ let neonPulse = 0;
 function resize() {
   const dpr = window.devicePixelRatio || 1;
   const size = Math.min(window.innerWidth, window.innerHeight) * 0.92;
-  canvas.width = size * dpr;
+
+  canvas.width  = size * dpr;
   canvas.height = size * dpr;
-  canvas.style.width = size + "px";
-  canvas.style.height = size + "px";
+  canvas.style.width  = `${size}px`;
+  canvas.style.height = `${size}px`;
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(dpr, dpr);
 
   CENTER = size / 2;
   RADIUS = size / 2 - 20;
+
+  // Redraw immediately after resize
+  draw();
 }
 window.addEventListener("resize", resize);
 resize();
@@ -48,9 +53,14 @@ function drawHand(angle, text, maxLength, step, baseColor) {
   ctx.save();
   ctx.translate(CENTER, CENTER);
   ctx.rotate(angle);
-  ctx.font = `bold ${Math.max(14, RADIUS * 0.055)}px Orbitron`;
+
+  // Cleaner font: Exo 2 (modern, less chunky than Orbitron)
+  // Fallback to sans-serif if Exo 2 isn't loaded
+  const fontSize = Math.max(13, RADIUS * 0.048);
+  ctx.font = `500 ${fontSize}px "Exo 2", sans-serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
+
   const computed = getComputedStyle(document.documentElement);
   const accentColor = computed.getPropertyValue('--text').trim();
 
@@ -68,7 +78,6 @@ function drawHand(angle, text, maxLength, step, baseColor) {
     ctx.globalAlpha = Math.max(0.38, 0.96 - progress * 0.62);
     ctx.fillStyle = (currentTheme === 'neon') ? accentColor : baseColor;
     ctx.fillText(text, 0, -y);
-
     y += step;
   }
 
@@ -84,6 +93,7 @@ function drawClockFace() {
   ctx.beginPath();
   ctx.arc(CENTER, CENTER, RADIUS, 0, Math.PI * 2);
   ctx.stroke();
+
   ctx.fillStyle = computed.getPropertyValue('--text').trim() + '40';
   for (let i = 0; i < 12; i++) {
     const a = degToRad(i * 30);
@@ -95,22 +105,25 @@ function drawClockFace() {
 }
 
 function draw() {
+  // Clear the logical canvas size (not scaled pixels)
   ctx.clearRect(0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
 
   const now = new Date();
   const h = String(now.getHours() % 12 || 12).padStart(2, "0");
   const m = String(now.getMinutes()).padStart(2, "0");
   const s = String(now.getSeconds()).padStart(2, "0");
-  const minAngle = degToRad(now.getMinutes() * 6 + now.getSeconds() * 0.1);
-  const hourAngle = degToRad((now.getHours() % 12) * 30 + now.getMinutes() * 0.5);
-  const sec = now.getSeconds() + now.getMilliseconds() / 1000;
-  const secAngle = degToRad(sec * 6);
 
+  const sec = now.getSeconds() + now.getMilliseconds() / 1000;
+  const secAngle  = degToRad(sec * 6);
+  const minAngle  = degToRad(now.getMinutes() * 6 + sec * 0.1);
+  const hourAngle = degToRad((now.getHours() % 12) * 30 + now.getMinutes() * 0.5);
 
   drawClockFace();
-  drawHand(hourAngle, h, RADIUS * 0.52, 21, "#ffca80");
-  drawHand(minAngle, m, RADIUS * 0.78, 17, "#80ffe5");
-  drawHand(secAngle, s, RADIUS * 0.93, 13, "#ff80a8");
+
+  // Updated colors: softer, more cohesive cyberpunk/neon friendly
+  drawHand(hourAngle, h, RADIUS * 0.52, 21, "#ffdd57");   // soft neon gold
+  drawHand(minAngle,  m, RADIUS * 0.78, 17, "#57ffdd");   // cyan/teal
+  drawHand(secAngle,  s, RADIUS * 0.93, 13, "#ff57dd");   // magenta/pink
 
   const computed = getComputedStyle(document.documentElement);
   ctx.fillStyle = computed.getPropertyValue('--center').trim();
@@ -121,9 +134,9 @@ function draw() {
 
 function tick() {
   draw();
-  setTimeout(tick, 1000 - (Date.now() % 1000));
+  const delay = 1000 - (Date.now() % 1000);
+  setTimeout(tick, delay > 0 ? delay : 1000); // safeguard against negative/zero
 }
+
 tick();
 setTheme('dark');
-
-
