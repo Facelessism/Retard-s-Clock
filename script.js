@@ -12,6 +12,7 @@ function resize() {
   canvas.style.width = size + "px";
   canvas.style.height = size + "px";
 
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(dpr, dpr);
 
   CENTER = size / 2;
@@ -119,3 +120,4 @@ function draw() {
 setInterval(draw, 980);
 draw();
 setTheme('dark');
+
