@@ -48,7 +48,7 @@ function drawHand(angle, text, maxLength, step, baseColor) {
   ctx.save();
   ctx.translate(CENTER, CENTER);
   ctx.rotate(angle);
-  ctx.font = "bold 17px Orbitron";
+  ctx.font = `bold ${Math.max(14, RADIUS * 0.055)}px Orbitron`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   const computed = getComputedStyle(document.documentElement);
@@ -101,9 +101,11 @@ function draw() {
   const h = String(now.getHours() % 12 || 12).padStart(2, "0");
   const m = String(now.getMinutes()).padStart(2, "0");
   const s = String(now.getSeconds()).padStart(2, "0");
-  const secAngle = degToRad(now.getSeconds() * 6);
   const minAngle = degToRad(now.getMinutes() * 6 + now.getSeconds() * 0.1);
   const hourAngle = degToRad((now.getHours() % 12) * 30 + now.getMinutes() * 0.5);
+  const sec = now.getSeconds() + now.getMilliseconds() / 1000;
+  const secAngle = degToRad(sec * 6);
+
 
   drawClockFace();
   drawHand(hourAngle, h, RADIUS * 0.52, 21, "#ffca80");
@@ -117,7 +119,11 @@ function draw() {
   ctx.fill();
 }
 
-setInterval(draw, 980);
-draw();
+function tick() {
+  draw();
+  setTimeout(tick, 1000 - (Date.now() % 1000));
+}
+tick();
 setTheme('dark');
+
 
